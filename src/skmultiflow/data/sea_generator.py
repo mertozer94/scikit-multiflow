@@ -1,4 +1,6 @@
 import numpy as np
+from sklearn.preprocessing import normalize
+
 from skmultiflow.data.base_stream import Stream
 from skmultiflow.utils import check_random_state
 
@@ -239,9 +241,9 @@ class SEAGenerator(Stream):
             group = 0
             desired_class_found = False
             while not desired_class_found:
-                att1 = 10 * self._random_state.rand()
-                att2 = 10 * self._random_state.rand()
-                att3 = 10 * self._random_state.rand()
+                att1 =  self._random_state.rand()
+                att2 =  self._random_state.rand()
+                att3 =  self._random_state.rand()
                 group = self._classification_functions[self.classification_function](att1, att2, att3)
 
                 if not self.balance_classes:
@@ -254,6 +256,11 @@ class SEAGenerator(Stream):
 
             if 0.01 + self._random_state.rand() <= self.noise_percentage:
                 group = 1 if (group == 0) else 0
+
+
+            # normalize(att1, norm='l1')
+            # normalize(att2, norm='l1')
+            # normalize(att3, norm='l1')
 
             data[j, 0] = att1
             data[j, 1] = att2

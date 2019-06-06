@@ -2,8 +2,11 @@ import numpy as np
 from array import array
 import os
 from skmultiflow.data import ConceptDriftStream, SEAGenerator, HyperplaneGenerator
+from skmultiflow.meta import AdaptiveRandomForest
 from skmultiflow.trees import HAT
 
+def main():
+    test_hat_nba("teast")
 
 def test_hat_mc(test_path):
     stream = ConceptDriftStream(stream=SEAGenerator(random_state=1, noise_percentage=0.05),
@@ -12,7 +15,7 @@ def test_hat_mc(test_path):
                                 random_state=1, position=250, width=10)
     stream.prepare_for_use()
 
-    learner = HAT(leaf_prediction='mc')
+    learner = AdaptiveRandomForest()
 
     cnt = 0
     max_samples = 1000
@@ -120,7 +123,7 @@ def test_hat_nba(test_path):
 
     stream.prepare_for_use()
 
-    learner = HAT(leaf_prediction='nba')
+    learner = AdaptiveRandomForest()
 
     cnt = 0
     max_samples = 5000
@@ -157,3 +160,6 @@ def test_hat_nba(test_path):
     assert learner.get_info() == expected_info
     assert type(learner.predict(X)) == np.ndarray
     assert type(learner.predict_proba(X)) == np.ndarray
+
+if __name__ == "__main__":
+    main()
