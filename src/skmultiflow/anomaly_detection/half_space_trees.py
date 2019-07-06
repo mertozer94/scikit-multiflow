@@ -352,8 +352,8 @@ class HalfSpaceTree:
 
         """
         if self.root is not None and self.is_learning_phase_on is not True:
-            accumulated_score = self.anomaly_score(X)
-            anomaly_score = accumulated_score / max_score
+            score = self.anomaly_score(X)
+            anomaly_score = 1 - score / max_score
             return {0: 1 - anomaly_score, 1: anomaly_score}
         else:
             return {0: 0.5, 1: 0.5}

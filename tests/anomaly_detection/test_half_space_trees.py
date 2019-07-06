@@ -29,35 +29,27 @@ def test_hoeffding_tree(test_path):
     total_ones = 0
     j = 0
     for i in range(0, 1):
-        stream = SEAGenerator(random_state=1, noise_percentage=0.20)
 
-        stream.prepare_for_use()
-
-        learner = HalfSpaceTrees(dimensions=4, n_estimators=27, size_limit=70, anomaly_threshold=0.30, depth=20)
+        learner = HalfSpaceTrees(dimensions=4, n_estimators=25, size_limit=50, anomaly_threshold=0.90, depth=10)
 
         cnt = 0
-        max_samples = 100000
+        max_samples = 200000
         predictions = array('i')
         proba_predictions = []
-        wait_samples = 2000
+        wait_samples = 500
         real_anom_cnt = 0
         match = 0
         pred_shape1 = []
         real_y = []
         while cnt < max_samples:
-            X1, y1 = stream.next_sample()
-            # X = X_train.iloc[i, :]
-            # y = Y_train.iloc[i, :]
-
             X = X_train[j].reshape(1, 4)
-
 
             y = Y_train[j]
 
             if y == '\'Normal\'':
 
                 y = [0]
-            else :
+            else:
                 y = [1]
 
             # Test every n samples
@@ -66,10 +58,7 @@ def test_hoeffding_tree(test_path):
                 predictions.append(pre)
                 prediction_sc = learner.predict_proba(X)[0]
                 proba_predictions.append(prediction_sc)
-                if(prediction_sc[0] < prediction_sc[1]):
-                    pred_shape1.append(prediction_sc[0])
-                else:
-                    pred_shape1.append(prediction_sc[1])
+                pred_shape1.append(prediction_sc[1])
 
                 if y == [1]:
                     real_y.append(1)
@@ -86,8 +75,8 @@ def test_hoeffding_tree(test_path):
 
     print(roc_auc_score(real_y, pred_shape1))
     print("matching =", match)
-    print("real pred count =", real_anom_cnt)
-    print("predictions total length = ", total_lenght)
+    print("real anomaly count  =", real_anom_cnt)
+    print("predictions count  = ", total_lenght)
     print("we found anomaly count = ", total_ones)
 
 def scale(X, x_min, x_max):
